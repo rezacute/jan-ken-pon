@@ -19,6 +19,8 @@
         After the countdown, show a hand gesture and hold it for a moment.<br />
         The computer will then make its move (don't worry, it doesn't cheat).
       </p>
+      <!-- Game canvas -->
+      <canvas id="gameCanvas" width="800" height="600" style="display: none"></canvas>
 
       <div class="game-container">
         <div class="player">
@@ -78,9 +80,9 @@
         <div class="messages">
           <span id="message" class="message-text message-fadeInOut"></span>
         </div>
-        <div>
-          <button id="stopButton">Stop and Restart</button>
-        </div>
+      </div>
+      <div>
+        <button id="stopButton">Stop and Restart</button>
       </div>
     </div>
   </body>

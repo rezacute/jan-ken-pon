@@ -3,15 +3,17 @@ import '@/styles/index.scss'
 
 import { UI } from '@/js/UI'
 import { Prediction } from './js/Prediction'
-
+import html2canvas from 'html2canvas-pro'
 import camConfig from '@/js/CameraConfig'
 
 // store a reference to the player video
 var playerVideo
 
+var res_msg = ''
 // keep track of scores
 var playerScore = 0,
-  computerScore = 0
+  computerScore = 0,
+  result = 0
 
 // flag to control game loop
 let gameActive = false
@@ -46,6 +48,17 @@ async function onInit() {
 function setupStopButton() {
   const stopButton = document.getElementById('stopButton')
   stopButton.addEventListener('click', () => {
+    result = playerScore - computerScore
+    if (result > 0) {
+      res_msg = 'WIN'
+    } else if (result < 0) {
+      res_msg = 'LOOSE'
+    } else {
+      res_msg = 'DRAW'
+    }
+
+    UI.setStatusMessage('Result : ' + res_msg)
+    captureScreen()
     gameActive = false // Stop the game loop
     playerScore = 0
     computerScore = 0
@@ -54,6 +67,32 @@ function setupStopButton() {
     UI.setStatusMessage('Game stopped. Press any key to restart.')
     UI.stopAnimateMessage() // Stop blinking messages if any
     waitForPlayer() // Reset to waiting state
+
+    // Capture the screen after the game is stopped
+  })
+}
+
+function captureScreen() {
+  // Capture the entire game container
+  const gameContainer = document.querySelector('.game-container')
+
+  // Hide the canvas before capturing
+  const gameCanvas = document.getElementById('gameCanvas')
+  gameCanvas.style.display = 'block'
+  gameCanvas.width = gameContainer.offsetWidth
+  gameCanvas.height = gameContainer.offsetHeight
+
+  // Render the game container to the canvas
+  html2canvas(gameContainer).then(function (canvas) {
+    // Append the captured image to the body for demonstration purposes
+    document.body.appendChild(canvas)
+
+    // Reset the canvas display style after capturing
+    gameCanvas.style.display = 'none'
+    const link = document.createElement('a')
+    link.href = canvas.toDataURL('image/png')
+    link.download = 'game-screenshot.png'
+    link.click()
   })
 }
 
